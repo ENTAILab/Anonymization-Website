@@ -8,6 +8,10 @@
 		<version>4.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	<organization>
+        <name>Texttechnology Lab</name>
+        <url>https://www.texttechnologylab.org</url>
+    </organization>
 	<groupId>org.texttechnology.anon</groupId>
 	<artifactId>anonymizer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -29,14 +33,48 @@
 	<properties>
 		<java.version>21</java.version>
 	</properties>
+	
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+ 	<dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.dkpro.core</groupId>
+                <artifactId>dkpro-core-asl</artifactId>
+                <version>2.4.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 	<dependencies>
+		<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-data-jpa</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.github.texttechnologylab</groupId>
+				<artifactId>DockerUnifiedUIMAInterface</artifactId>
+				<version>1.5.5</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.github.texttechnologylab</groupId>
+						<artifactId>Utilities</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
@@ -47,15 +85,21 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf-test</artifactId>
+			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+
+		
+
+        <dependency>
+            <groupId>com.github.texttechnologylab</groupId>
+            <artifactId>UIMATypeSystem</artifactId>
+<!--                <version>9806cc024d08aa3164bbe1bd00adc09d408cdf0b</version>-->
+                <version>uima-3-SNAPSHOT</version>
+        </dependency>
+		
 	</dependencies>
+	
 
 	<build>
 		<plugins>
