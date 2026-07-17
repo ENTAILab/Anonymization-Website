@@ -2,11 +2,11 @@ duui:
   endpoint: http://localhost:9000
   timeout: 5000
 
-website:
+input:
   modalities:
     - text
 #    - audio
-#    - video
+#    - image
   text-anon-types:
     - blackout
     - replace
@@ -16,3 +16,8 @@ website:
     - blackout
     - diffused
   audio-anon-types:
+
+cas:
+  pool-size: 20
+  resource-specifier:
+  typesystem-path: 

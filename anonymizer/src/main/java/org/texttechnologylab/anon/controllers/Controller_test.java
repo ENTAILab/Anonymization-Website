@@ -1,4 +1,4 @@
-package org.texttechnology.anon.controllers;
+package org.texttechnologylab.anon.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
