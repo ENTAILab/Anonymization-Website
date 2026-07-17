@@ -1,0 +1,18 @@
+duui:
+  endpoint: http://localhost:9000
+  timeout: 5000
+
+website:
+  modalities:
+    - text
+#    - audio
+#    - video
+  text-anon-types:
+    - blackout
+    - replace
+  image-anon-types:
+    - blur
+    - pixel
+    - blackout
+    - diffused
+  audio-anon-types:
