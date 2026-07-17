@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @EnableAutoConfiguration
 @Configuration
-@ComponentScan("org.texttechnology.anon") // so that all files in the folder will be recognized by Spring
+@ComponentScan("org.texttechnologylab.anon") // so that all files in the folder will be recognized by Spring
 public class AnonymizerApplication {
 
 	public static void main(String[] args) {

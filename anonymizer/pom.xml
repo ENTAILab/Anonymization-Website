@@ -5,8 +5,8 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.1.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>3.5.3</version>
+		<relativePath/>
 	</parent>
 	<organization>
         <name>Texttechnology Lab</name>
@@ -40,19 +40,20 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
- 	<dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.dkpro.core</groupId>
-                <artifactId>dkpro-core-asl</artifactId>
-                <version>2.4.0</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.dkpro.core</groupId>
+				<artifactId>dkpro-core-asl</artifactId>
+				<version>2.4.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
+
 		<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -62,11 +63,21 @@
 				<artifactId>DockerUnifiedUIMAInterface</artifactId>
 				<version>1.5.5</version>
 				<exclusions>
+
 					<exclusion>
 						<groupId>com.github.texttechnologylab</groupId>
 						<artifactId>Utilities</artifactId>
 					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-context</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-beans</artifactId>
+					</exclusion>
 				</exclusions>
+
 			</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -95,9 +106,13 @@
             <groupId>com.github.texttechnologylab</groupId>
             <artifactId>UIMATypeSystem</artifactId>
 <!--                <version>9806cc024d08aa3164bbe1bd00adc09d408cdf0b</version>-->
-                <version>uima-3-SNAPSHOT</version>
+                <version>uima-3-7b28d4f323-1</version>
         </dependency>
-		
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-webmvc</artifactId>-->
+<!--		</dependency>-->
+
 	</dependencies>
 	
 
