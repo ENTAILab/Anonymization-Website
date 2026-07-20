@@ -1,13 +1,67 @@
+const base = "http://localhost:8080"; // adjust port
 
-function changeTextButton(){
-    var changeBtn = document.getElementById("changeButton");
-    if(changeBtn.value =="Click me"){
-        changeBtn.value = "i have been clicked";
-        changeBtn.classList.add("green");
-        changeBtn.classList.remove("red");
-    }else{
-        changeBtn.value = "Click me";
-        changeBtn.classList.add("red");
-        changeBtn.classList.remove("green");
-    }
+async function loadModalities() {
+    const res = await fetch(`${base}/api/modalities`);
+    const modalities = await res.json();
+    const sel = document.getElementById("modality");
+
+
+    sel.innerHTML = '<option value="">-- select --</option>' +
+        modalities.map(m => `<option value="${m}">${m}</option>`).join("");
 }
+
+document.getElementById("modality").addEventListener("change", async (e) => {
+    const inputType = e.target.value;
+    const methodSel = document.getElementById("method");
+    if (!inputType) { methodSel.disabled = true; return; }
+
+    const res = await fetch(`${base}/api/methods?inputType=${inputType}`);
+    const methods = await res.json();
+    methodSel.innerHTML = methods.map(m => `<label><input type="checkbox" name="method" value="${m}"> ${m}</label>`).join("");
+    methodSel.disabled = false;
+});
+
+
+function collectParameters(){
+    const chosenMethods = Array.from(
+        document.querySelectorAll('input[name="method"]:checked')
+    ).map(el => el.value)
+
+
+    const params = {
+        modality: document.getElementById("modality").value,
+        method: chosenMethods,
+        views: document.getElementById("view-toggle").checked,
+        textinput: document.getElementById("text-input-area").value,
+    };
+    return params;
+}
+
+
+async function sendToEndpoint(params) {
+    const res = await fetch(`${base}/api/process`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(params)
+    });
+    return res.json();
+}
+
+document.getElementById("process-btn").addEventListener("click", async ()=>{
+    const params = collectParameters();
+
+
+    console.log(params)
+    await sendToEndpoint(params);
+    // continue here todo
+})
+
+
+
+
+
+
+// __________ load methods
+
+loadModalities()
+

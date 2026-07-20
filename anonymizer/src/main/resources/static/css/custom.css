@@ -4,3 +4,24 @@
 .red{
     background-color: red;
 }
+
+textarea {
+    width: 100%;
+    max-width: 600px;
+    min-height: 120px;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: vertical;      /* let user resize height only, not width */
+    box-sizing: border-box; /* padding doesn't blow out the width */
+    transition: border-color 0.15s ease;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #4a90d9;
+    box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.15);
+}

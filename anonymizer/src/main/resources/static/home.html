@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Home Page</title>
+        <link rel="stylesheet" type="text/css" href="/css/default.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/custom.css"/>
+
+        <script src="/js/home.js" defer></script>
+    </head>
+    <body>
+
+    <select id="modality">
+        <option value="">-- select --</option>
+    </select>
+
+    <div id="method"></div>
+
+    <!-- additional parameters needed for the website  -->
+    <div id="parameters"></div>
+
+ 
+    <label><input type="checkbox" id="view-toggle">Enable separate views </label>
+
+    <!-- plain text input for text-anonymization -->
+    <div id="text-input">
+        <textarea id="text-input-area" name="text-input-area" placeholder="Enter text here..."></textarea>
+
+    </div>
+    <!-- file upload JSON / CAS -->
+    <div id="file-input"></div>
+    <!-- audio / image input -->
+
+
+    <button id="process-btn">Process</button>
+
+
+    </body> 
+</html>

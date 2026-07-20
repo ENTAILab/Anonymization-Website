@@ -4,9 +4,9 @@ duui:
 
 input:
   modalities:
-    - text
-#    - audio
-#    - image
+    - TEXT
+#    - AUDIO
+#    - IMAGE
   text-anon-types:
     - blackout
     - replace

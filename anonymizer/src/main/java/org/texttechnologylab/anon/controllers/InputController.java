@@ -1,18 +1,25 @@
 package org.texttechnologylab.anon.controllers;
 
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.texttechnologylab.anon.config.InputProperties;
+import org.texttechnologylab.anon.data.AudioInput;
+import org.texttechnologylab.anon.data.ImageInput;
+import org.texttechnologylab.anon.data.Input;
 import org.texttechnologylab.anon.data.TextInput;
+import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping
 class InputController {
     @Autowired
     private InputProperties inputProperties;
+
 // get - read data
 
 
@@ -20,7 +27,8 @@ class InputController {
     public List<String> getAvailableModalities(){
         return inputProperties.getModalities();
     }
-    // TODO lowk dont remember which methods there were....
+
+
     /**
      * Lists available methods (such as "remove"/"blackout" depending on the inputType)
      * GET /methods?inputType=text
@@ -29,20 +37,33 @@ class InputController {
      */
     @GetMapping("/api/methods")
     public List<String> getAvailableMethods(@RequestParam String inputType){
-        switch (inputType){
-            case "text":
+        Input.Modality modality = Input.Modality.valueOf(inputType);
+        switch (modality){
+            case TEXT:
                 return inputProperties.getTextAnonTypes();
-            case "image":
+            case IMAGE:
                 return inputProperties.getImageAnonTypes();
-            case "audio":
+            case AUDIO:
                 return inputProperties.getAudioAnonTypes();
             default:
                 return List.of("Nothing found for the given input Type");
         }
     }
 
-    public ResponseEntity<String> submitInput(@RequestBody TextInput input){
-        // TODO input
+
+
+
+
+
+
+
+
+    public ResponseEntity<String> submitImageInput(){
         return null;
     }
+    public ResponseEntity<String> submitAudioInput(){
+        return null;
+    }
+
+
 }
