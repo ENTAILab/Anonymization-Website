@@ -25,3 +25,18 @@ textarea:focus {
     border-color: #4a90d9;
     box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.15);
 }
+
+.error-popup{
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #f44336;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-family: sans-serif;
+    max-width: 320px;
+    z-index: 1000;
+}

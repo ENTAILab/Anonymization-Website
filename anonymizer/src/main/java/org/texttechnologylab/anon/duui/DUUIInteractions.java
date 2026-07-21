@@ -1,12 +1,45 @@
 package org.texttechnologylab.anon.duui;
 
+import org.apache.uima.UIMAException;
+import org.texttechnologylab.DockerUnifiedUIMAInterface.DUUIComposer;
+import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.DUUIDockerDriver;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.DUUIRemoteDriver;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.IDUUIDriverInterface;
+import org.texttechnologylab.DockerUnifiedUIMAInterface.lua.DUUILuaContext;
+import org.texttechnologylab.anon.config.enums.ApplicationEnums;
 import org.texttechnologylab.anon.data.Input;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class DUUIInteractions {
 
+    // todo make this like singleton sth sth
 
+    private DUUIComposer composer;
+
+    public DUUIInteractions() throws IOException, URISyntaxException, UIMAException, SAXException {
+        initialize();
+    }
+
+    private void initialize() throws IOException, URISyntaxException, UIMAException, SAXException {
+        DUUILuaContext luaContext = new DUUILuaContext().withJsonLibrary();
+        this.composer = new DUUIComposer()
+                .withSkipVerification(true)
+                .withLuaContext(luaContext)
+                .withWorkers(1);
+
+        DUUIRemoteDriver remoteDriver = new DUUIRemoteDriver();
+        DUUIDockerDriver dockerDriver = new DUUIDockerDriver();
+        this.composer.addDriver(remoteDriver, dockerDriver);
+
+
+    }
+
+    private void addComponent(String modality, String uri, ApplicationEnums.DUUICOMPONENTS componentType){
+
+    }
     // idea: a DUUI class with an instance per user ? TODO how the hell does one implement that
     // idea2: a set number of Instances and use a queue system?
 

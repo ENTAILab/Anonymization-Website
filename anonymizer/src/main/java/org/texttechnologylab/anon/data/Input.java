@@ -3,6 +3,7 @@ package org.texttechnologylab.anon.data;
 import org.apache.uima.cas.CASException;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.texttechnologylab.anon.config.enums.ApplicationEnums;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ public abstract class Input {
     protected List<String> anon_method = new ArrayList<>();
     protected Boolean dif_views = false;
 
-    public enum Modality { TEXT, AUDIO, IMAGE};
 
 
     protected Input(String type){
@@ -72,7 +72,7 @@ public abstract class Input {
         return getClass().getSimpleName() + toMap();
     }
 
-    public static Input createInput(Modality modality){
+    public static Input createInput(ApplicationEnums.MODALITIES modality){
         return switch (modality){
             case TEXT -> new TextInput();
             case AUDIO -> new AudioInput();

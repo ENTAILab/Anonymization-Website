@@ -4,7 +4,9 @@ import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.texttechnologylab.anon.config.DUUIProperties;
 import org.texttechnologylab.anon.config.InputProperties;
+import org.texttechnologylab.anon.config.enums.ApplicationEnums;
 import org.texttechnologylab.anon.data.AudioInput;
 import org.texttechnologylab.anon.data.ImageInput;
 import org.texttechnologylab.anon.data.Input;
@@ -20,11 +22,14 @@ class InputController {
     @Autowired
     private InputProperties inputProperties;
 
+    @Autowired
+    private DUUIProperties duuiProperties;
+
 // get - read data
 
 
     @GetMapping("/api/modalities")
-    public List<String> getAvailableModalities(){
+    public List<ApplicationEnums.MODALITIES> getAvailableModalities(){
         return inputProperties.getModalities();
     }
 
@@ -37,14 +42,14 @@ class InputController {
      */
     @GetMapping("/api/methods")
     public List<String> getAvailableMethods(@RequestParam String inputType){
-        Input.Modality modality = Input.Modality.valueOf(inputType);
+        ApplicationEnums.MODALITIES modality = ApplicationEnums.MODALITIES.valueOf(inputType);
         switch (modality){
             case TEXT:
-                return inputProperties.getTextAnonTypes();
+                return duuiProperties.getTextAnonTypes();
             case IMAGE:
-                return inputProperties.getImageAnonTypes();
+                return duuiProperties.getImageAnonTypes();
             case AUDIO:
-                return inputProperties.getAudioAnonTypes();
+                return duuiProperties.getAudioAnonTypes();
             default:
                 return List.of("Nothing found for the given input Type");
         }

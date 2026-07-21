@@ -33,18 +33,29 @@ function collectParameters(){
         method: chosenMethods,
         views: document.getElementById("view-toggle").checked,
         textinput: document.getElementById("text-input-area").value,
+        duuicomponent: document.querySelector("input[name='component-urls']:checked").value,
+        duuiurl: document.getElementById("entryBox-component").value,
     };
     return params;
 }
 
 
 async function sendToEndpoint(params) {
-    const res = await fetch(`${base}/api/process`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(params)
-    });
-    return res.json();
+    try {
+        const res = await fetch(`${base}/api/process`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(params)
+        });
+        const output = await res.json();
+        if (!res.ok) {
+            showError(output.message || "something didnt work")
+            return;
+        }
+        return output;
+    }catch (error){
+        showError("couldnt reach the server")
+    }
 }
 
 document.getElementById("process-btn").addEventListener("click", async ()=>{
@@ -56,6 +67,16 @@ document.getElementById("process-btn").addEventListener("click", async ()=>{
     // continue here todo
 })
 
+function componentURI(){
+    const entryBox = document.getElementById("entryBox-component");
+    const selected = document.querySelector("input[name='component-urls']:checked").value;
+
+    // TODO uncomment this once i have remote links
+
+    //entryBox.disabled = (selected != "docker");
+    //if (entryBox.disabled) entryBox.value = " ";
+
+}
 
 
 

@@ -6,11 +6,12 @@
         <link rel="stylesheet" type="text/css" href="/css/custom.css"/>
 
         <script src="/js/home.js" defer></script>
+        <script src="js/errors.js" defer></script>
     </head>
     <body>
 
     <select id="modality">
-        <option value="">-- select --</option>
+        <option value=""></option>
     </select>
 
     <div id="method"></div>
@@ -18,12 +19,23 @@
     <!-- additional parameters needed for the website  -->
     <div id="parameters"></div>
 
+    <!-- todo  adjust this to be PER modality once all modalities are implemented -->
+    <div id="component-urls-div">
+        <label>
+            <input type="radio" name="component-urls" value="REMOTE" onchange="componentURI()"> Remote Component
+        </label>
+        <label>
+            <input type="radio" name="component-urls" value="DOCKER" onchange="componentURI()"> Docker Component
+        </label>
+        <br><br>
+        <input type="text" id="entryBox-component" placeholder="Enter URL...">
+    </div>
  
     <label><input type="checkbox" id="view-toggle">Enable separate views </label>
 
     <!-- plain text input for text-anonymization -->
     <div id="text-input">
-        <textarea id="text-input-area" name="text-input-area" placeholder="Enter text here..."></textarea>
+        <textarea id="text-input-area" name="text-input-area" placeholder="Enter text to be processed here..."></textarea>
 
     </div>
     <!-- file upload JSON / CAS -->
@@ -33,6 +45,7 @@
 
     <button id="process-btn">Process</button>
 
+    <div id="error-popup" class="error-popup"></div>
 
     </body> 
 </html>
