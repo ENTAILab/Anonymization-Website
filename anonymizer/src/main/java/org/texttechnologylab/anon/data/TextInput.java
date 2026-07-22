@@ -36,11 +36,8 @@ public class TextInput extends Input {
     @Override
     public JCas toJCas(JCas cas) throws ResourceInitializationException, CASException {
         cas.reset();
-        cas.setDocumentText(this.input_text);
+        cas.getView("_InitialView").setDocumentText(this.input_text);
         cas.setDocumentLanguage("en");
-
-        DocumentMetaData dmd = new DocumentMetaData(cas);
-        dmd.setDocumentId("test");
 
         return cas;
     }

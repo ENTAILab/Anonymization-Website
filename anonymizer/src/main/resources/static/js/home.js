@@ -17,7 +17,7 @@ document.getElementById("modality").addEventListener("change", async (e) => {
 
     const res = await fetch(`${base}/api/methods?inputType=${inputType}`);
     const methods = await res.json();
-    methodSel.innerHTML = methods.map(m => `<label><input type="checkbox" name="method" value="${m}"> ${m}</label>`).join("");
+    methodSel.innerHTML = methods.map(m => `<label><input type="radio" name="method" value="${m}"> ${m}</label>`).join("");
     methodSel.disabled = false;
 });
 
@@ -51,7 +51,6 @@ function collectParameters(){
         methods: chosenMethods,
         views: document.getElementById("view-toggle").checked,
         textinput: document.getElementById("text-input-area").value,
-        duuicomponent: document.querySelector("input[name='component-urls']:checked").value,
         duuiurl: document.getElementById("entryBox-component").value,
         parameters: inputParams
     };
@@ -97,11 +96,16 @@ function componentURI(){
 
 }
 
-
+async function loadResults(){
+    const response = await fetch("/api/results");
+    const text = await response.text();
+    document.getElementById("output").textContent = text;
+}
 
 
 
 // __________ load methods
 
 loadModalities()
+setInterval(loadResults, 10000); // every 10s
 

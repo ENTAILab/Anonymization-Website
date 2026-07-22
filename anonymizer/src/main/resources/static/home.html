@@ -21,14 +21,10 @@
 
     <!-- todo  adjust this to be PER modality once all modalities are implemented -->
     <div id="component-urls-div">
-        <label>
-            <input type="radio" name="component-urls" value="REMOTE" onchange="componentURI()"> Remote Component
-        </label>
-        <label>
-            <input type="radio" name="component-urls" value="DOCKER" onchange="componentURI()"> Docker Component
-        </label>
-        <br><br>
-        <input type="text" id="entryBox-component" placeholder="Enter URL...">
+       <label for="entryBox-component">
+           <input type="text" id="entryBox-component" name="uri" placeholder="Enter Component URL...">
+       </label>
+
     </div>
  
     <label><input type="checkbox" id="view-toggle">Enable separate views </label>
@@ -47,5 +43,6 @@
 
     <div id="error-popup" class="error-popup"></div>
 
+    <div id="output">Waiting for results...</div>
     </body> 
 </html>

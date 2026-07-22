@@ -2,6 +2,7 @@ package org.texttechnologylab.anon.duui;
 
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.uima.UIMAException;
+import org.apache.uima.cas.CASException;
 import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.json.JsonCasSerializer;
@@ -14,6 +15,7 @@ import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.DUUIRemoteDriver;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.DUUIUIMADriver;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.IDUUIDriverInterface;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.lua.DUUILuaContext;
+import org.texttechnologylab.anon.config.DUUIProperties;
 import org.texttechnologylab.anon.config.enums.ApplicationEnums;
 import org.texttechnologylab.anon.data.Input;
 import org.texttechnologylab.anon.duui.components.Component;
@@ -41,6 +43,12 @@ public class DUUIInteractions {
 
     private void makeCAS() throws UIMAException {
         this.jcas = JCasFactory.createJCas();
+    }
+
+    public void addView(ApplicationEnums.MODALITIES modalitiy) throws CASException {
+        System.out.println("test");
+        this.jcas.createView(DUUIProperties.getInstance().getView(modalitiy));
+        System.out.println("created view for " +modalitiy);
     }
 
     private void initialize() throws IOException, URISyntaxException, UIMAException, SAXException {

@@ -1,5 +1,6 @@
 package org.texttechnologylab.anon.controllers;
 
+import com.dropbox.core.v2.teamlog.SmartSyncOptOutType;
 import org.apache.uima.UIMAException;
 import org.bytedeco.libfreenect._freenect_context;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,12 @@ import org.texttechnologylab.anon.config.DUUIProperties;
 import org.texttechnologylab.anon.config.InputProperties;
 import org.texttechnologylab.anon.config.enums.ApplicationEnums;
 import org.texttechnologylab.anon.data.Input;
+import org.texttechnologylab.anon.data.Output;
+import org.texttechnologylab.anon.data.OutputProcessor;
 import org.texttechnologylab.anon.data.TextInput;
 import org.texttechnologylab.anon.duui.DUUIInteractions;
 import org.texttechnologylab.anon.duui.components.Component;
-import org.texttechnologylab.anon.helper.InputHelper;
+import org.texttechnologylab.anon.helper.Helper;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -32,9 +35,13 @@ public class MainController {
 
     @Autowired
     private DUUIProperties duuiProperties;
+    @Autowired
+    private Output output;
+
 
     private final DUUIInteractions dUUIInteractions;
     private List<Input> inputs;
+    List<ApplicationEnums.MODALITIES> modalities = new ArrayList<>();
 
     MainController(DUUIInteractions dUUIInteractions) throws IOException, URISyntaxException, UIMAException, SAXException {
         this.dUUIInteractions = dUUIInteractions;
@@ -43,9 +50,13 @@ public class MainController {
     }
 
 
-    private void initializePipeline(InputHelper.ProcessRequest request ) throws Exception {
+    private void initializePipeline(Helper.ProcessRequest request ) throws Exception {
         System.out.println("Initializing Pipeline...");
         ApplicationEnums.MODALITIES modality = ApplicationEnums.MODALITIES.valueOf(request.modality().toUpperCase());
+        this.modalities.add(modality);
+        if (this.inputs.size() > 1) {
+            System.out.println("STH WENT WRONG");
+        }
         for(Input input : inputs) {
             input.toJCas(dUUIInteractions.getJcas());
         }
@@ -64,6 +75,8 @@ public class MainController {
             // sets uri and "creates" the component (as uri is needed to create it)
             component.setUri(request.duuiurl());
 
+            component.addTargetView(component.getViewName());
+            /*
             if (inputs.getFirst().getDifViews()) {
                 component.addTargetView(component.getViewName());
                 // no source -> always reads initial view
@@ -74,6 +87,8 @@ public class MainController {
                 }
                 // first component: no source -> reads initial view; writes to shared view
             }
+            */
+
             component.addProperties(request.parameters());
             // todo how to make it possible that the mode selection is always a "many select"
             component.addProperty("mode", method);
@@ -84,34 +99,37 @@ public class MainController {
         }
 
 
+        for (ApplicationEnums.MODALITIES mod : modalities) {
+            dUUIInteractions.addView(mod);
+        }
 
-        dUUIInteractions.getJcas().getViewIterator().forEachRemaining(viewIterator -> {
-            System.out.println("ViewIterator: " + viewIterator.getViewName());
-        });
 
         dUUIInteractions.addComponents(components);
         dUUIInteractions.addXMIWriter();
 
-        dUUIInteractions.sanityCheck();
+        //dUUIInteractions.sanityCheck();
 
 
-        //dUUIInteractions.addComponent(component);
         dUUIInteractions.run();
+        //Helper.simpleTempExporter(dUUIInteractions.getJcas(), "test1");
 
+        OutputProcessor outputProcessor = new OutputProcessor(modalities);
+        Helper.ProcessResponse result = outputProcessor.processJCas(dUUIInteractions.getJcas());
+        output.setOutputText(result.text()); // or whatever the record field is called
     }
 
 
 
     @PostMapping("/api/process")
     public ResponseEntity<?> process(
-            @RequestBody InputHelper.ProcessRequest request) throws Exception {
+            @RequestBody Helper.ProcessRequest request) throws Exception {
         //  dpeending on modality => create new modalityInput
         // if len(modalities) > 1 => enforce dif views
         // get cas of that input type  (each dif view if multiple input types, else depending on parameter)
         // send TextInput to DUUIInteractions => runs pipeline => returns annotated cas => output controller
 
-        InputHelper.checkIntegrity(request);
-        InputHelper.stripParameters(request);
+        Helper.checkIntegrity(request);
+        Helper.stripParameters(request);
         System.out.println("Processing Request...");
         // todo extend for the other modalities  with a loop
         // 1. make input
