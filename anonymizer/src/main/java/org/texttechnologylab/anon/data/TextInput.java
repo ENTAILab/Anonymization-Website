@@ -5,17 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.tudarmstadt.ukp.dkpro.core.api.metadata.type.DocumentMetaData;
 import org.apache.uima.cas.CASException;
 import org.apache.uima.jcas.JCas;
 
 import org.apache.uima.resource.ResourceInitializationException;
 import org.bson.json.JsonObject;
+import org.texttechnologylab.anon.config.DUUIProperties;
+import org.texttechnologylab.anon.config.enums.ApplicationEnums;
 
 public class TextInput extends Input {
     private String input_text;
 
     public TextInput() {
-       super("text");
+       super(ApplicationEnums.MODALITIES.TEXT);
     }
 
     public void setInput_text(String text) {
@@ -33,10 +36,12 @@ public class TextInput extends Input {
     @Override
     public JCas toJCas(JCas cas) throws ResourceInitializationException, CASException {
         cas.reset();
-        if(this.dif_views){
-            cas.createView("textView");
-        }
         cas.setDocumentText(this.input_text);
+        cas.setDocumentLanguage("en");
+
+        DocumentMetaData dmd = new DocumentMetaData(cas);
+        dmd.setDocumentId("test");
+
         return cas;
     }
 

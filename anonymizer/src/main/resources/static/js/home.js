@@ -22,19 +22,38 @@ document.getElementById("modality").addEventListener("change", async (e) => {
 });
 
 
+document.getElementById("modality").addEventListener("change", async (e) => {
+    const inputType = e.target.value;
+    const methodSel = document.getElementById("parameters");
+
+    if (!inputType) { methodSel.disabled = true; return; }
+
+    const res = await fetch(`${base}/api/parameters?inputType=${inputType}`);
+    const methods = await res.json();
+    methodSel.innerHTML = methods.map(m => `<label for="${m}">${m}</label><br><input type="text" id="parameter-options" name="${m}"> `).join("");
+    methodSel.disabled = false;
+});
+
+
+
+
 function collectParameters(){
     const chosenMethods = Array.from(
         document.querySelectorAll('input[name="method"]:checked')
     ).map(el => el.value)
-
-
+    const parameterInput = document.querySelectorAll("#parameters input[type='text']");
+    const inputParams = {};
+    parameterInput.forEach(parameterInput => {
+        inputParams[parameterInput.name] = parameterInput.value;
+    });
     const params = {
         modality: document.getElementById("modality").value,
-        method: chosenMethods,
+        methods: chosenMethods,
         views: document.getElementById("view-toggle").checked,
         textinput: document.getElementById("text-input-area").value,
         duuicomponent: document.querySelector("input[name='component-urls']:checked").value,
         duuiurl: document.getElementById("entryBox-component").value,
+        parameters: inputParams
     };
     return params;
 }
@@ -62,10 +81,10 @@ document.getElementById("process-btn").addEventListener("click", async ()=>{
     const params = collectParameters();
 
 
-    console.log(params)
+    console.log(params);
     await sendToEndpoint(params);
     // continue here todo
-})
+});
 
 function componentURI(){
     const entryBox = document.getElementById("entryBox-component");

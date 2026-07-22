@@ -3,6 +3,9 @@ package org.texttechnologylab.anon.data;
 import org.apache.uima.cas.CASException;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.texttechnologylab.anon.config.DUUIProperties;
+import org.texttechnologylab.anon.config.InputProperties;
 import org.texttechnologylab.anon.config.enums.ApplicationEnums;
 
 import java.lang.reflect.Field;
@@ -12,19 +15,25 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Input {
+
     protected Long id;
-    protected String input_type;
+    protected ApplicationEnums.MODALITIES modality;
     protected List<String> anon_method = new ArrayList<>();
     protected Boolean dif_views = false;
+    public String viewName;
 
-
-
-    protected Input(String type){
-        this.input_type=type;
+    public Input(ApplicationEnums.MODALITIES modality) {
+        this.modality = modality;
     }
-    public String getType() {
-        return this.input_type;
+
+    public String getViewName() {
+        return viewName;
     }
+
+    public void setViewName(String viewName) {
+        this.viewName = viewName;
+    }
+
 
 
 
@@ -47,7 +56,7 @@ public abstract class Input {
     }
 
 
-    abstract JCas toJCas(JCas cas) throws ResourceInitializationException, CASException;
+    public abstract JCas toJCas(JCas cas) throws ResourceInitializationException, CASException;
 
 
     public Map<String, Object> toMap() {

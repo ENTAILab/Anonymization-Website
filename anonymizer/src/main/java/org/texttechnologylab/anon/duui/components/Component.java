@@ -1,52 +1,106 @@
 package org.texttechnologylab.anon.duui.components;
 
-import org.apache.uima.UIMAException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.compress.compressors.CompressorException;
+import org.apache.uima.util.InvalidXMLException;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.DUUIComposer;
-import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.DUUIDockerDriver;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.DUUIPipelineComponent;
 import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.DUUIRemoteDriver;
-import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.IDUUIDriverInterface;
 import org.texttechnologylab.anon.config.DUUIProperties;
 import org.texttechnologylab.anon.config.InputProperties;
 import org.texttechnologylab.anon.config.enums.ApplicationEnums;
-import org.texttechnologylab.anon.data.Input;
+import org.texttechnologylab.anon.exceptions.MissingUriException;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Map;
 
 public abstract class Component {
     protected final DUUIProperties duuiProperties = new DUUIProperties();
     protected final InputProperties inputProperties = new InputProperties();
 
     // docker uri has higher priority over the remote one. The remote one will be used as fallback
-    private static String remoteUri = null;
-    private static String dockerUri = null;
-    private ApplicationEnums.MODALITIES modality;
-    private ApplicationEnums.DUUICOMPONENTS componentType;
-    private IDUUIDriverInterface component;
+    protected String uri = null;
+    protected ApplicationEnums.MODALITIES modality;
+    protected DUUIRemoteDriver.Component remoteComponent;
 
-    Component(String type){
+
+    public String viewName;
+
+    Component(String type) throws URISyntaxException, IOException {
         this.modality = ApplicationEnums.MODALITIES.valueOf(type);
-
+        this.viewName = DUUIProperties.getInstance().getView(modality);
     }
 
-    public void setDockerUri(String dockerUri) {
-        this.dockerUri = dockerUri;
+    public String getViewName() {
+        return this.viewName;
     }
 
-    public void setRemoteUri(String remoteUri) {
-        this.remoteUri = remoteUri;
-    }
-
-    public void setComponent() throws IOException, UIMAException, SAXException {
-        if (dockerUri == null){
-            component = new DUUIDockerDriver();
-        }else{
-            component = new DUUIRemoteDriver();
+    protected void checkUri(){
+        if(uri == null || uri.isEmpty()){
+            throw new MissingUriException("Please provide a URI");
         }
     }
+    public void setUri(String uri) throws URISyntaxException, IOException {
+        System.out.println("setting URI: " + uri);
+        this.uri = uri;
+        checkUri();
+        createComponent();
+    }
 
-    public abstract void addToComposer(DUUIComposer composer);
+    public String getUri() {
+        return this.uri;
+    }
 
+    protected void createComponent() throws URISyntaxException, IOException {
+        this.remoteComponent = new DUUIRemoteDriver.Component(this.uri);
+    }
+
+    public void addProperties(Map<String,String> properties) throws IOException {
+        for  (String key : properties.keySet()) {
+            System.out.println("key: " + key + " value: " + properties.get(key));
+//            if(parameters.contains(key)) {
+
+            this.remoteComponent.withParameter(key, properties.get(key));
+//            }
+        }
+    }
+    public void addProperty(String key, String value) throws IOException {
+        this.remoteComponent.withParameter(key, value);
+    }
+
+    public void addSourceView(String viewName){
+        this.remoteComponent.withSourceView(viewName);
+    }
+    public void addTargetView(String viewName){
+        this.remoteComponent.withTargetView(viewName);
+        System.out.println("Adding target view: " + viewName);
+
+    }
+
+
+    public abstract void removePropertiesFromComponent();
+    public abstract void addToComposer(DUUIComposer composer) throws CompressorException, InvalidXMLException, IOException, SAXException;
+
+    public DUUIPipelineComponent getRemoteComponent() {
+        return remoteComponent.build();
+    }
+
+    // TODO Adjust modal
+    public static Component newComponent(ApplicationEnums.MODALITIES modality) throws URISyntaxException, IOException {
+        switch (modality) {
+            case TEXT -> {
+                return new TextComponent();
+            }
+            case AUDIO ->  {
+                return null;
+            }
+            case IMAGE -> {
+                return null;
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
 }

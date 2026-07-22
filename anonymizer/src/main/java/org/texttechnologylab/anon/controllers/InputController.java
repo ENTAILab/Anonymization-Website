@@ -56,19 +56,26 @@ class InputController {
     }
 
 
-
-
-
-
-
-
-
-    public ResponseEntity<String> submitImageInput(){
-        return null;
+    @GetMapping("/api/parameters")
+    public List<String> getAvailableParameters(@RequestParam String inputType){
+        ApplicationEnums.MODALITIES modality = ApplicationEnums.MODALITIES.valueOf(inputType);
+        switch (modality){
+            case TEXT:
+                return duuiProperties.getTextAnonProperties();
+            case IMAGE:
+                return duuiProperties.getImageAnonProperties();
+            case AUDIO:
+                return duuiProperties.getAudioAnonProperties();
+            default:
+                return List.of("Nothing found for the given input Type");
+        }
     }
-    public ResponseEntity<String> submitAudioInput(){
-        return null;
-    }
+
+
+
+
+
+
 
 
 }

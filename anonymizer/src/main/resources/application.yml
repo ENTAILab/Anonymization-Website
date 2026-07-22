@@ -8,7 +8,10 @@ duui:
     - placeholder
     - remove
     #    - pseudo
-  text-anon-propeties:
+  text-view: textView # as given by the anonymize component
+  audio-view: audioView
+  image-view: imageView
+  text-anon-properties:
     - model
     - trust_remote_code
     - device

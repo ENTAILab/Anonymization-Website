@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.texttechnologylab.anon.exceptions.BadInputException;
 import org.texttechnologylab.anon.exceptions.MissingAnonTypeException;
 import org.texttechnologylab.anon.exceptions.MissingModalityException;
 import org.texttechnologylab.anon.exceptions.MissingUriException;
@@ -18,7 +19,12 @@ public class ExceptionController {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("message", exception.getMessage()));
     }
-
+    @ExceptionHandler
+    public ResponseEntity<?> handleBadInput(BadInputException exception){
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("message", exception.getMessage()));
+    }
     @ExceptionHandler(MissingModalityException.class)
     public ResponseEntity<?> handleMissingModality(MissingModalityException exception){
         return ResponseEntity
