@@ -1,34 +1,26 @@
 package org.texttechnologylab.anon.controllers;
 
-import com.dropbox.core.v2.teamlog.SmartSyncOptOutType;
 import org.apache.uima.UIMAException;
-import org.bytedeco.libfreenect._freenect_context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.texttechnologylab.anon.config.DUUIProperties;
 import org.texttechnologylab.anon.config.InputProperties;
 import org.texttechnologylab.anon.config.enums.ApplicationEnums;
 import org.texttechnologylab.anon.data.Input;
 import org.texttechnologylab.anon.data.Output;
-import org.texttechnologylab.anon.data.OutputProcessor;
 import org.texttechnologylab.anon.data.TextInput;
 import org.texttechnologylab.anon.duui.DUUIInteractions;
-import org.texttechnologylab.anon.duui.components.Component;
 import org.texttechnologylab.anon.helper.Helper;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.texttechnologylab.anon.duui.components.Component.newComponent;
 
 
-@Controller
+@RestController
 public class MainController {
     @Autowired
     private InputProperties inputProperties;
@@ -38,85 +30,27 @@ public class MainController {
     @Autowired
     private Output output;
 
+    private final PipelineService pipelineService;
 
-    private final DUUIInteractions dUUIInteractions;
-    private List<Input> inputs;
-    List<ApplicationEnums.MODALITIES> modalities = new ArrayList<>();
-
-    MainController(DUUIInteractions dUUIInteractions) throws IOException, URISyntaxException, UIMAException, SAXException {
-        this.dUUIInteractions = dUUIInteractions;
-        this.inputs = new ArrayList<>();
+    MainController(PipelineService pipelineService) throws IOException, URISyntaxException, UIMAException, SAXException {
+        this.pipelineService = pipelineService;
 
     }
+    /**
+     * clean up all the backend stuff so its a clean slate for next call
+     * (so far just the cas but yknow multiple users TODO)
+     * @return
+     */
+    @PostMapping("/api/results/clean")
+    public ResponseEntity<?> clearPipeline(){
 
-
-    private void initializePipeline(Helper.ProcessRequest request ) throws Exception {
-        System.out.println("Initializing Pipeline...");
-        ApplicationEnums.MODALITIES modality = ApplicationEnums.MODALITIES.valueOf(request.modality().toUpperCase());
-        this.modalities.add(modality);
-        if (this.inputs.size() > 1) {
-            System.out.println("STH WENT WRONG");
-        }
-        for(Input input : inputs) {
-            input.toJCas(dUUIInteractions.getJcas());
-        }
-
-        List<Component> components = new ArrayList<>();
-        boolean first = true;
-        for(String method : request.methods()) {
-            Component component = newComponent(modality);
-            if (component == null) {
-                System.out.println("component is null");
-            }
-
-
-
-            // Todo how to do multiple URIS for dif modalities
-            // sets uri and "creates" the component (as uri is needed to create it)
-            component.setUri(request.duuiurl());
-
-            component.addTargetView(component.getViewName());
-            /*
-            if (inputs.getFirst().getDifViews()) {
-                component.addTargetView(component.getViewName());
-                // no source -> always reads initial view
-            } else if (inputs.size() > 1) {
-                component.addTargetView(component.getViewName());
-                if (!first) {
-                    component.addSourceView(component.getViewName());
-                }
-                // first component: no source -> reads initial view; writes to shared view
-            }
-            */
-
-            component.addProperties(request.parameters());
-            // todo how to make it possible that the mode selection is always a "many select"
-            component.addProperty("mode", method);
-
-            System.out.println(component);
-            components.add(component);
-            first = false;
-        }
-
-
-        for (ApplicationEnums.MODALITIES mod : modalities) {
-            dUUIInteractions.addView(mod);
-        }
-
-
-        dUUIInteractions.addComponents(components);
-        dUUIInteractions.addXMIWriter();
-
-        //dUUIInteractions.sanityCheck();
-
-
-        dUUIInteractions.run();
-        //Helper.simpleTempExporter(dUUIInteractions.getJcas(), "test1");
-
-        OutputProcessor outputProcessor = new OutputProcessor(modalities);
-        Helper.ProcessResponse result = outputProcessor.processJCas(dUUIInteractions.getJcas());
-        output.setOutputText(result.text()); // or whatever the record field is called
+        // TODO adjust, this only calls if sth changed between requests ASIDE from text
+        // actually maybe this can be implemented with the fact that the class attributes are NOT cleared between calls
+        // give it maybe a check?
+        pipelineService.reset();
+        return ResponseEntity.ok().build();
     }
+
 
 
 
@@ -142,7 +76,7 @@ public class MainController {
         if (input instanceof TextInput textInput) {
            textInput.setInput_text(request.textinput());
         }
-        this.inputs.add(input);
+        pipelineService.addInput(input);
 
         // 2. add component according to parameters and the provided link / if remote or no
 
@@ -155,7 +89,7 @@ public class MainController {
         - return back to website using output controlelr
         -
          */
-        initializePipeline(request);
+        pipelineService.initializePipeline(request);
         // return ok if type created
         return ResponseEntity.ok(input);
         }

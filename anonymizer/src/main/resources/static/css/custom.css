@@ -1,42 +1,238 @@
-.green{
-    background-color: green;
-}
-.red{
-    background-color: red;
-}
-
-textarea {
-    width: 100%;
-    max-width: 600px;
-    min-height: 120px;
-    padding: 12px;
-    font-family: inherit;
-    font-size: 1rem;
-    line-height: 1.5;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    resize: vertical;      /* let user resize height only, not width */
-    box-sizing: border-box; /* padding doesn't blow out the width */
-    transition: border-color 0.15s ease;
+/*  full theme */
+:root {
+    --bs-primary: #015c63;
+    --bs-primary-rgb: 8, 133, 109;
 }
 
-textarea:focus {
-    outline: none;
-    border-color: #4a90d9;
-    box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.15);
+
+/* container layout
+   container grid placement made using https://grid.layoutit.com
+    */
+.container {
+    padding-top: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1.3fr 1.5fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-auto-columns: 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row dense;
 }
 
-.error-popup{
-    display: none;
+.Input    { grid-area: 2 / 2 / 5 / 3; }
+.Settings { grid-area: 2 / 1 / 5 / 2; }
+.Output   { grid-area: 2 / 3 / 5 / 4; }
+.Top      { grid-area: 1 / 1 / 2 / 4; }
+
+/* containers: border + padding so they don't stick together */
+.Top, .Input, .Output, .Settings {
+    /*border: 1px solid #DDDDDD;*/
+    border-radius: 0;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+}
+
+.Input, .Output, .Settings {
+    flex-direction: column;
+}
+
+.Top {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #DDDDDD;
+    border-radius: 0;
+}
+
+
+/* any popups */
+.Popups {
     position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #f44336;
+    top: 4.5rem; /* below the navbar */
+    right: 1.5rem;
+    z-index: 1050;
+    width: 320px;
+    pointer-events: none;
+}
+
+.Popups .alert {
+    pointer-events: auto;
+}
+
+.output-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    color: #015c63;
+}
+
+.spinner-border {
+    color: #08856D;
+}
+
+
+/* headers */
+.section-header {
+    color: #08856D;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 2px solid #16DC80;
+}
+
+.Top .section-header {
+    display: block;
+    width: 100%;
+}
+
+.navbar-brand span {
+    color: #08856D;
+}
+
+
+/* input / output field  */
+.tall-field {
+    min-height: 50vh;
+}
+
+#text-input, #text-input .form-control {
+    height: 100%;
+}
+
+#text-input {
+    flex: 1;
+    display: flex;
+}
+
+/* text input: fixed size, not resizable */
+#text-input-area {
+    resize: none;
+    flex: 1;
+    height: auto;
+}
+
+.Output .card {
+    flex: 1;
+}
+
+
+/* buttons general */
+
+.btn, .btn-toggle, .form-control, .form-select, .card {
+    border-radius: 0 !important;
+}
+
+
+/* overides for the bootstrap primary button */
+.btn-primary {
+    background-color: #015c63;
+    border-color: #015c63;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: #015c63;
+    border-color: #015c63;
+}
+
+
+
+.btn-group-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.btn-toggle {
+    border: 1px solid #08856D;
+    background: white;
+    color: #015c63;
+    border-radius: 0.5rem;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.btn-toggle:hover {
+    background: #e6f5f1;
+}
+
+.btn-toggle.active {
+    background: #08856D;
     color: white;
-    padding: 14px 20px;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    font-family: sans-serif;
-    max-width: 320px;
-    z-index: 1000;
+}
+
+.btn-toggle:focus,
+.btn-toggle.active:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.btn-toggle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f0f0f0;
+    color: #999;
+    border-color: #ccc;
+}
+
+button[data-bs-toggle="collapse"] {
+    position: relative;
+}
+
+#more-settings-btn,
+#view-toggle {
+    width: 100%;
+    display: block;
+    margin-top: 0.5rem;
+}
+
+/* less padding between modality buttons and method buttons underneath */
+#modality-group {
+    margin-bottom: 0.5rem !important;
+}
+
+
+/* PRocess button made to match the "see latest updates" button on the spp */
+
+
+#process-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 176px;
+    height: 56px;
+    padding: 0 2rem;
+    font-family: 'Rubik', Arial, sans-serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border: 2px solid transparent;
+    border-radius: 8px !important;
+    background:
+            linear-gradient(90deg, #1ddf84 0%, #5efcad 100%) padding-box,
+            linear-gradient(90deg, #66ffb2 0%, #16dc80 45%, #015c63 100%) border-box;
+    color: black;
+    transition: background 150ms ease, color 150ms ease;
+}
+
+#process-btn:hover:not(:disabled) {
+    background: #015c63;
+    color: white;
+}
+
+#process-btn:disabled {
+    background: #a9c9c2;
+    box-shadow: none;
+    cursor: not-allowed;
 }

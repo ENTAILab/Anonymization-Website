@@ -8,7 +8,7 @@ duui:
     - placeholder
     - remove
     #    - pseudo
-  text-view: textView # as given by the anonymize component
+  text-view: textView
   audio-view: audioView
   image-view: imageView
   text-anon-properties:

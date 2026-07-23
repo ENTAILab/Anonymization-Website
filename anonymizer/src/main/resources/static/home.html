@@ -1,48 +1,97 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title> Home Page</title>
-        <link rel="stylesheet" type="text/css" href="/css/default.css"/>
+        <title> Anonymization Website</title>
+        <link rel="icon" type="image/png" href="/images/entaillablogo.png">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="/css/custom.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/more.css"/>
 
+        <!-- for making the buttons -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/js/home.js" defer></script>
         <script src="js/errors.js" defer></script>
     </head>
     <body>
+    <!-- top navbar -->
+    <nav class="navbar navbar-light bg-white border-bottom px-3">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+            <img src="/images/entaillablogo.png" alt="logo" height="32">
+            <span class="fw-semibold">ENTAILAB ANONYMIZATION WEBSITE</span>
+        </a>
+    </nav>
+    <div class="Popups">
+        <div id="error-popup" class="alert alert-danger d-none" role="alert"></div>
 
-    <select id="modality">
-        <option value=""></option>
-    </select>
-
-    <div id="method"></div>
-
-    <!-- additional parameters needed for the website  -->
-    <div id="parameters"></div>
-
-    <!-- todo  adjust this to be PER modality once all modalities are implemented -->
-    <div id="component-urls-div">
-       <label for="entryBox-component">
-           <input type="text" id="entryBox-component" name="uri" placeholder="Enter Component URL...">
-       </label>
 
     </div>
- 
-    <label><input type="checkbox" id="view-toggle">Enable separate views </label>
+    <div class="container">
 
-    <!-- plain text input for text-anonymization -->
-    <div id="text-input">
-        <textarea id="text-input-area" name="text-input-area" placeholder="Enter text to be processed here..."></textarea>
+        <div class="Top d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="section-header">Modality</h5>
+                <div id="modality-group" class="btn-group-toggle" role="group"></div>
+                <div id="method-group" class="btn-group-toggle mt-2" role="group"></div>
+            </div>
+
+            <button id="process-btn" class="btn btn-primary gradient-outline">proccess</button>
+        </div>
+
+        <div class="Input">
+            <h5 class="section-header">Input</h5>
+
+            <div id="file-input"></div>
+
+            <div id="text-input">
+                <textarea id="text-input-area" name="text-input-area"
+                          class="form-control tall-field"
+                          placeholder="Enter text to be processed here..."></textarea>
+            </div>
+        </div>
+
+        <div class="Output">
+            <h5 class="section-header">Output</h5>
+            <div class="card tall-field position-relative">
+                <div class="card-body">
+                    <div id="output" class="text-muted">Waiting for results...</div>
+                </div>
+
+                <div id="waiting-popup" class="d-none output-overlay">
+                    <div class="spinner-border" role="status" aria-hidden="true"></div>
+                    <span>Processing...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="Settings">
+            <h5 class="section-header">Settings</h5>
+
+            <!-- always visible -->
+            <div id="component-urls-div" class="mb-2">
+                <label for="entryBox-component" class="form-label">Remote / Docker URL</label>
+                <input type="text" id="entryBox-component" name="uri"
+                       class="form-control" placeholder="Enter Component URL...">
+            </div>
+
+            <button type="button" id="view-toggle" class="btn-toggle" data-active="false">
+                Enable separate views
+            </button>
+
+            <button id="more-settings-btn" type="button" class="btn-toggle mb-2" disabled
+                    data-bs-toggle="collapse" data-bs-target="#more-settings"
+                    aria-expanded="false" aria-controls="more-settings">
+                Show more settings
+            </button>
+
+            <div class="collapse" id="more-settings">
+                <div id="parameters"></div>
+            </div>
+        </div>
+
+
+
 
     </div>
-    <!-- file upload JSON / CAS -->
-    <div id="file-input"></div>
-    <!-- audio / image input -->
 
-
-    <button id="process-btn">Process</button>
-
-    <div id="error-popup" class="error-popup"></div>
-
-    <div id="output">Waiting for results...</div>
-    </body> 
+    </body>
 </html>

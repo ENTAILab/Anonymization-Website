@@ -17,6 +17,7 @@ import org.texttechnologylab.DockerUnifiedUIMAInterface.driver.IDUUIDriverInterf
 import org.texttechnologylab.DockerUnifiedUIMAInterface.lua.DUUILuaContext;
 import org.texttechnologylab.anon.config.DUUIProperties;
 import org.texttechnologylab.anon.config.enums.ApplicationEnums;
+import org.texttechnologylab.anon.controllers.MainController;
 import org.texttechnologylab.anon.data.Input;
 import org.texttechnologylab.anon.duui.components.Component;
 import org.xml.sax.SAXException;
@@ -43,6 +44,16 @@ public class DUUIInteractions {
 
     private void makeCAS() throws UIMAException {
         this.jcas = JCasFactory.createJCas();
+    }
+    public void resetCAS(){
+        System.out.println("== RESETTING CAS ==");
+
+        this.jcas.reset();
+
+    }
+    public void resetComposer(){
+        System.out.println("== RESETTING PIPELINE ==");
+        this.composer.resetPipeline();
     }
 
     public void addView(ApplicationEnums.MODALITIES modalitiy) throws CASException {

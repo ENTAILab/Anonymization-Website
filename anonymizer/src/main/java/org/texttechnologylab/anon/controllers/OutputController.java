@@ -4,12 +4,10 @@ import org.apache.uima.cas.CASException;
 import org.apache.uima.jcas.JCas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.texttechnologylab.anon.config.InputProperties;
 import org.texttechnologylab.anon.data.Output;
+import org.texttechnologylab.anon.duui.DUUIInteractions;
 
 @RestController
 @RequestMapping
@@ -18,17 +16,22 @@ public class OutputController {
     private InputProperties inputProperties;
     @Autowired
     private Output output;
+    @Autowired
+    private DUUIInteractions dUUIInteractions;
 
     /**
      * takes the textResult, turns it into an object that ca be jsonified
-     * @param textResult
      * @return
      */
-    @PutMapping("/api/results")
-    public ResponseEntity<?> updateResult(@RequestBody String textResult) {
-        output.setOutputText(textResult);
-        return ResponseEntity.ok().build();
+    @GetMapping("/api/results")
+    public ResponseEntity<String> getResult() {
+        String text = output.getOutputText();
+        if (text == null) {
+            text = "";
+        }
+        return ResponseEntity.ok(text);
     }
+
 
 
 }
