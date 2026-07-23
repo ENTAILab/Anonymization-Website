@@ -40,14 +40,14 @@ To test the website **without** a live DUUI component:
 2. Comment out line 94: `dUUIInteractions.addComponents(components);`
 3. Uncomment line 96: `dUUIInteractions.getJcas().getView("textView").setDocumentText("This is a placeholder text for simulating the output!");`
 
-This bypasses the real pipeline and returns a placeholder result instead,
+This bypasses the need for a component (only runs the XMIWriter to assure that the Composer works) and returns a placeholder result instead,
 so the site's request/response flow can be verified end-to-end without
 a live component.
 
 **To run against a real component instead:**
 
 1. Start the `duui-anonymization` container
-2. Enter its port in the "Component URL" field on the site
+2. Enter its URL in the "Component URL" field on the site
 3. Make sure `PipelineService.java` has the real pipeline call active
    (line 94 uncommented, line 96 commented — i.e. the reverse of Test Mode above)
 
