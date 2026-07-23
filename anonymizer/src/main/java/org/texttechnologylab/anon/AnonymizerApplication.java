@@ -3,6 +3,7 @@ package org.texttechnologylab.anon;
 import org.apache.uima.UIMAException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.texttechnologylab.anon.duui.DUUIInteractions;
@@ -22,9 +23,10 @@ public class AnonymizerApplication {
 
 	public static void main(String[] args) throws IOException, URISyntaxException, UIMAException, SAXException {
 		duuiInteractions = new DUUIInteractions();
-		SpringApplication.run(AnonymizerApplication.class, args);
+		ConfigurableApplicationContext context = SpringApplication.run(AnonymizerApplication.class, args);
 
-		System.out.println("port:http://localhost:8080/home.html ");
+		String port = context.getEnvironment().getProperty("server.port", "8080");
+		System.out.println("Running at: http://localhost:" + port + "/home.html");
 	}
 
 }

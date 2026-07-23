@@ -90,9 +90,9 @@ public class PipelineService {
         }
         try {
 
-
+            // adding the actual components:
             dUUIInteractions.addComponents(components);
-
+            // test mode (as the website reads out the Sofa String on that specific view)
             //dUUIInteractions.getJcas().getView("textView").setDocumentText("This is a placeholder text for simulating the output!");
 
 

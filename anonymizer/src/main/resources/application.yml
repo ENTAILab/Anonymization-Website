@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 duui:
   endpoint: http://localhost:9000
   timeout: 5000
