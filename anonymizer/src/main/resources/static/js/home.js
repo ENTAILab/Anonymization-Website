@@ -22,6 +22,7 @@ async function loadModalities() {
             group.querySelectorAll(".btn-toggle").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             selectedModality = btn.dataset.value;
+            selectedMethod = null;
             await loadMethods(selectedModality);
             await loadParameters(selectedModality);
 

@@ -39,6 +39,9 @@ public class PipelineService {
         System.out.println("Initializing Pipeline...");
         output.setOutputText(null);
         ApplicationEnums.MODALITIES modality = ApplicationEnums.MODALITIES.valueOf(request.modality().toUpperCase());
+
+        System.out.println(request);
+        
         this.modalities.add(modality);
         if (this.inputs.size() > 1) {
             System.out.println("STH WENT WRONG");
@@ -89,6 +92,8 @@ public class PipelineService {
             dUUIInteractions.addView(mod);
         }
         try {
+            System.out.println("SANITY CHECK BEFORE");
+            dUUIInteractions.sanityCheck();
 
             // adding the actual components:
             dUUIInteractions.addComponents(components);
@@ -98,11 +103,12 @@ public class PipelineService {
 
 
             dUUIInteractions.addXMIWriter();
+            
+            System.out.println("SANITY CHECK AFTER");
+            dUUIInteractions.sanityCheck();
 
-            //dUUIInteractions.sanityCheck();
 
-
-
+            // todo
             dUUIInteractions.run();
         } catch (Exception e) {
             e.printStackTrace();

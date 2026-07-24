@@ -1,8 +1,7 @@
 server:
-  port: 8080
-
+  port: 8077
+  #address: 127.0.0.1
 duui:
-  endpoint: http://localhost:9000
   timeout: 5000
   components:
     - REMOTE

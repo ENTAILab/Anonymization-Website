@@ -54,6 +54,7 @@ public class DUUIInteractions {
     public void resetComposer(){
         System.out.println("== RESETTING PIPELINE ==");
         this.composer.resetPipeline();
+        this.composer.resetService();
     }
 
     public void addView(ApplicationEnums.MODALITIES modalitiy) throws CASException {
@@ -84,6 +85,7 @@ public class DUUIInteractions {
     public void addComponent(Component component) throws UIMAException, CompressorException, IOException, SAXException {
         this.composer.add(component.getRemoteComponent());
         System.out.println("added component");
+        System.out.println("components Properties:" + component.toString());
 //        System.out.println(this.composer.get_pipeline());
     }
 

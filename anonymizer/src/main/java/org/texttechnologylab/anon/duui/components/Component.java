@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.HashMap;
 
 public abstract class Component {
     protected final DUUIProperties duuiProperties = new DUUIProperties();
@@ -23,6 +24,8 @@ public abstract class Component {
     protected String uri = null;
     protected ApplicationEnums.MODALITIES modality;
     protected DUUIRemoteDriver.Component remoteComponent;
+
+    protected Map<String, String> parameters = new HashMap<>();
 
 
     public String viewName;
@@ -59,14 +62,14 @@ public abstract class Component {
     public void addProperties(Map<String,String> properties) throws IOException {
         for  (String key : properties.keySet()) {
             System.out.println("key: " + key + " value: " + properties.get(key));
-//            if(parameters.contains(key)) {
-
-            this.remoteComponent.withParameter(key, properties.get(key));
-//            }
+            addProperty(key, properties.get(key));
         }
     }
     public void addProperty(String key, String value) throws IOException {
+        System.out.println("key: " + key + " value: " + value);
+
         this.remoteComponent.withParameter(key, value);
+        this.parameters.put(key, value);
     }
 
     public void addSourceView(String viewName){
@@ -83,7 +86,7 @@ public abstract class Component {
     public abstract void addToComposer(DUUIComposer composer) throws CompressorException, InvalidXMLException, IOException, SAXException;
 
     public DUUIPipelineComponent getRemoteComponent() {
-        return remoteComponent.build();
+        return remoteComponent.build().withTimeout(1000);
     }
 
     // TODO Adjust modal
@@ -102,5 +105,14 @@ public abstract class Component {
                 return null;
             }
         }
+    }
+    @Override
+    public String toString() {
+    return "Component{" +
+            "uri='" + uri + '\'' +
+            ", modality=" + modality +
+            ", viewName='" + viewName + '\'' +
+            ", parameters=" + parameters +
+            '}';
     }
 }

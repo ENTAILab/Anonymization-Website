@@ -26,7 +26,8 @@ public class AnonymizerApplication {
 		ConfigurableApplicationContext context = SpringApplication.run(AnonymizerApplication.class, args);
 
 		String port = context.getEnvironment().getProperty("server.port", "8080");
-		System.out.println("Running at: http://localhost:" + port + "/home.html");
+		String address = context.getEnvironment().getProperty("server.address", "localhost");
+		System.out.println("Running at: http://" +address+ ":" + port + "/home.html");
 	}
 
 }
